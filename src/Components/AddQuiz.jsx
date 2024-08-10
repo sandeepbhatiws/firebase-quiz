@@ -1,14 +1,60 @@
 import Header from './Header.jsx'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { ToastContainer, toast } from 'react-toastify';
+import { app } from "../firebase.js";
+import { getDatabase, ref, set } from "firebase/database";
+
 
 export default function AddQuiz() {
+
+    let formHandler = (event) => {
+        event.preventDefault();
+
+        var question = event.target.question.value;
+        var option1 = event.target.option1.value;
+        var option2 = event.target.option2.value;
+        var option3 = event.target.option3.value;
+        var option4 = event.target.option4.value;
+        var correct_answer = event.target.correct_answer.value;
+
+        if(question == '' || option1 == '' || option2 == '' || option3 == '' || option4 == '' || correct_answer == ''){
+            toast.error('All fileds required')
+        } else {
+
+            let obj = {
+                question : question,
+                option1 : option1,
+                option2 : option2,
+                option3 : option3,
+                option4 : option4,
+                correct_answer : correct_answer,
+            }
+
+            const db = getDatabase(app);
+            set(ref(db, 'quizzes/' + Date.now()), obj);
+
+            toast.success('Quiz added successfully !!');
+
+            event.target.question.value = ''
+            event.target.option1.value = ''
+            event.target.option2.value = ''
+            event.target.option3.value = ''
+            event.target.option4.value = ''
+            event.target.correct_answer.value = ''
+
+            // toast.success('get data');
+        }
+
+    }
+
     return (
         <>
             <Header/>
+            <ToastContainer/>
             <h1 className="p-5 text-3xl font-bold text-center bg-gray-400">
                 Add Quiz
             </h1>
-            <form className='p-5'>
+            <form className='p-5' onSubmit={formHandler}>
                 <div className="space-y-12">
                     <div className="pb-12 border-b border-gray-900/10"></div>
                     
@@ -19,7 +65,7 @@ export default function AddQuiz() {
                         <div className="mt-2">
                             <textarea
                             id="about"
-                            name="about"
+                            name="question"
                             rows={3}
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             defaultValue={''}

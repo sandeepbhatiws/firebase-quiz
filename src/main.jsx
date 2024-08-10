@@ -4,6 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import Header from './Components/Header.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import 'react-toastify/dist/ReactToastify.css';
 import Main from './Components/Main.jsx'
 import AddQuiz from './Components/AddQuiz.jsx'
 import ViewQuiz from './Components/ViewQuiz.jsx'
